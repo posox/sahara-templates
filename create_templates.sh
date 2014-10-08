@@ -11,7 +11,7 @@
 #done
 
 FLOATING_IP_POOL=$(neutron net-list | grep 'net04_ext' | awk '{print $2}')
-MNG_NETWORK=$(neutron net-list | grep 'dev-private' | awk '{print $2}')
+MNG_NETWORK=$(neutron net-list | grep 'net04 ' | awk '{print $2}')
 VANILLA_IMAGE_ID="vanilla-image"
 HDP_IMAGE_ID="hdp-image"
 
