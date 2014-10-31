@@ -1,7 +1,7 @@
 {
     "name": "vanilla-2-master",
     "plugin_name": "vanilla",
-    "hadoop_version": "2.3.0",
+    "hadoop_version": "2.4.1",
     "flavor_id": "3",
     "node_processes": [
         "namenode",
@@ -9,5 +9,6 @@
         "oozie",
         "historyserver"
     ],
-    "floating_ip_pool": "FLOATING_IP_POOL"
+    "floating_ip_pool": "FLOATING_IP_POOL",
+    "auto_security_group": true
 }
