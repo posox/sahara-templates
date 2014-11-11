@@ -37,6 +37,17 @@ hdp_master_template_id=$(sahara node-group-template-create --json $tmp_file | gr
 sed "s/FLOATING_IP_POOL/$FLOATING_IP_POOL/g" ng_tmpl_hdp_worker.json > $tmp_file
 hdp_worker_template_id=$(sahara node-group-template-create --json $tmp_file | grep ' id ' | awk '{print $4}')
 
+# create cdh ng templates
+
+sed "s/FLOATING_IP_POOL/$FLOATING_IP_POOL/g" ng_tmpl_cdh_manager.json > $tmp_file
+cdh_manager_template_id=$(sahara node-group-template-create --json $tmp_file | grep ' id ' | awk '{print $4}')
+
+sed "s/FLOATING_IP_POOL/$FLOATING_IP_POOL/g" ng_tmpl_cdh_master.json > $tmp_file
+cdh_master_template_id=$(sahara node-group-template-create --json $tmp_file | grep ' id ' | awk '{print $4}')
+
+sed "s/FLOATING_IP_POOL/$FLOATING_IP_POOL/g" ng_tmpl_cdh_worker.json > $tmp_file
+cdh_worker_template_id=$(sahara node-group-template-create --json $tmp_file | grep ' id ' | awk '{print $4}')
+
 # create vanilla cluster tempate
 
 sed -e "s/MASTER_NG_TEMPLATE/$van_master_template_id/g" \
@@ -44,7 +55,7 @@ sed -e "s/MASTER_NG_TEMPLATE/$van_master_template_id/g" \
     -e "s/MANAGEMENT_NETWORK/$MNG_NETWORK/g" cl_tmpl_vanilla.json > $tmp_file
 sahara cluster-template-create --json $tmp_file
 
-# create hdp cluster_template
+# create hdp cluster template
 
 sed -e "s/MANAGER_NG_TEMPLATE/$hdp_manager_template_id/g" \
     -e "s/MASTER_NG_TEMPLATE/$hdp_master_template_id/g" \
@@ -52,11 +63,19 @@ sed -e "s/MANAGER_NG_TEMPLATE/$hdp_manager_template_id/g" \
     -e "s/MANAGEMENT_NETWORK/$MNG_NETWORK/g" cl_tmpl_hdp.json > $tmp_file
 sahara cluster-template-create --json $tmp_file
 
+# create cdh cluster template
+
+sed -e "s/MANAGER_NG_TEMPLATE/$cdh_manager_template_id/g" \
+    -e "s/MASTER_NG_TEMPLATE/$cdh_master_template_id/g" \
+    -e "s/WORKER_NG_TEMPLATE/$cdh_worker_template_id/g" \
+    -e "s/MANAGEMENT_NETWORK/$MNG_NETWORK/g" cl_tmpl_cdh.json > $tmp_file
+sahara cluster-template-create --json $tmp_file
+
 # register image
 
 #sahara image-register --id $VANILLA_IMAGE_ID --username ubuntu
 #sahara image-register --id $HDP_IMAGE_ID --username cloud-user
 #sahara image-add-tag --id $VANILLA_IMAGE_ID --tag vanilla
-#sahara image-add-tag --id $VANILLA_IMAGE_ID --tag 2.3.0
+#sahara image-add-tag --id $VANILLA_IMAGE_ID --tag 2.4.1
 #sahara image-add-tag --id $HDP_IMAGE_ID --tag hdp
 #sahara image-add-tag --id $HDP_IMAGE_ID --tag 2.0.6
